@@ -1,0 +1,22 @@
+.spinnerBox{
+    display: flex;
+    justify-content: center;
+    font-size: 30px;
+    margin-top: 40px;
+}
+.spinner{
+    
+    margin-right: 10px;
+    animation: spinner 2s infinite linear;
+    
+}
+
+
+@keyframes spinner{
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(359deg);
+    }
+}

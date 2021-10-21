@@ -1,0 +1,43 @@
+@import '/node_modules/modern-normalize/modern-normalize.css';
+
+html {
+  box-sizing: border-box;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+
+body {
+  margin: 0;
+  font-family: 'Georgia', 'Times New Roman', Times, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(190, 210, 248);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+ul{
+  list-style: none;
+}
+
+.error{
+  margin-left: auto;
+  margin-right: auto;
+  color: red;
+}
