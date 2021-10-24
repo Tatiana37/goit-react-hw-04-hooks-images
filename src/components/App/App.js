@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getPictures } from '../../services/PixabayAPI';
@@ -11,95 +11,78 @@ import ErrorView from '../ErrorView/ErrorView';
 import PendingView from '../PendingView/PendingView';
 
 
-class App extends Component {
-  state = {
-    page: 1,
-    searchQuery: '',
-    pictures: [],
-    loading: false,
-    showModal: false,
-    largePicture: {},
-  }
-  
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.searchQuery !== prevState.searchQuery) {
-      this.fetchSearch()
+function App() {
+  const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [pictures, setPictures] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [largePicture, setLargePicture] = useState({});
+
+  useEffect(() => {
+    if (!searchQuery) return;
+    setLoading(true);
+    const fetchSearch = () => {
+      getPictures(searchQuery, page)
+        .then(pictures => {
+          setPictures(prev => [...prev, ...pictures]
+          );
+          if (!page) {
+            window.scrollTo({
+              top: document.documentElement.scrollHeight,
+              behavior: 'smooth',
+            });
+          }
+        })
         .catch(err => console.log(err))
-        .finally(() => this.setState({ loading: false }));
-      
+        .finally(() => setLoading(false));
     }
-    
-  }
-
-  fetchSearch() {
-    const { searchQuery, page } = this.state;
-    this.setState({ loading: true });
-    return getPictures(searchQuery, page).then(pictures => {
-      this.setState(prev => ({
-        pictures: [...prev.pictures, ...pictures],
-        page: prev.page + 1,
-      }));
-    });
-  }
+    fetchSearch();
+  }, [searchQuery, page]);
 
   
-  handleFormSubmit = searchQuery => {
-    this.setState({
-      page: 1, 
-      searchQuery, 
-      pictures: []
-    });
+  const handleFormSubmit = searchQuery => {
+    setPage(1);
+    setSearchQuery(searchQuery);
+    setPictures([]);
+    setLoading(true);
   }
   
   
-handleLoadMoreClick =()=>{
-  this.setState({loading:true});
-  this.fetchSearch()
-  .then(()=>{
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: 'smooth',
-    });
-  })
-  .catch((err)=> console.log(err))
-  .finally(() => this.setState({loading: false }));
+  const handleLoadMoreClick = fetchSearch => {
+    setLoading(true);
+    setPage(prev => prev + 1);
+    setLoading(false);
+
 }
 
-handleModalClick= largePicture =>{
-  this.setState({largePicture});
-  this.toggleModal();
+const handleModalClick= largePicture =>{
+  setLargePicture(largePicture);
+  toggleModal();
 }
 
-toggleModal = () => {
-  this.setState(({showModal}) => ({
-    showModal: !showModal,
-  }))
-}
+const toggleModal = () => setShowModal(!showModal)
 
-
-  render() {
-    const { loading, searchQuery, pictures, largePicture, showModal } = this.state;
       return (
         <Container>
           <ToastContainer/>
-          <Searchbar onSubmit={this.handleFormSubmit}/>
-          {loading && <PendingView/>}
-          {pictures.length !== 0 ? (<ImageGallery pictures={pictures} onModalOpen={this.handleModalClick}/>)
+          <Searchbar onSubmit={handleFormSubmit}/>
+          {pictures.length !== 0 ? (<ImageGallery pictures={pictures} onModalOpen={handleModalClick}/>)
           : (searchQuery !== '' && <ErrorView/>)}
           {loading && <PendingView/>}
-          {pictures.length > 0 && <Button onClick={this.handleLoadMoreClick}/>}
+          {pictures.length > 0 && <Button onClick={handleLoadMoreClick} />}
           {showModal && (
-            <Modal onClose={this.toggleModal}>
+            <Modal onClose={toggleModal}>
               {loading && <PendingView/>}
               <img 
               src={largePicture.largeImageURL}
-              alt={largePicture.tags}
+                alt={largePicture.tags}
+                width='800'
               />
             </Modal>)
   }
     </Container>
   )
   }
-}
 
 export default App;
