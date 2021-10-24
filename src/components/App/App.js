@@ -27,7 +27,7 @@ function App() {
         .then(pictures => {
           setPictures(prev => [...prev, ...pictures]
           );
-          if (!page) {
+          if (page !== 1) {
             window.scrollTo({
               top: document.documentElement.scrollHeight,
               behavior: 'smooth',
