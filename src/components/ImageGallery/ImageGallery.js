@@ -1,14 +1,14 @@
 import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
 import PropTypes from 'prop-types';
 import s from './ImageGallery.module.css';
+// import shortid from "shortid";
 
+// const elId = shortid.generate();
 export default function ImageGallery({pictures, onModalOpen}){
     return (
-        <ul className={s.ImageGallery}>
+        <ul className={s.ImageGallery} >
         {pictures.map(picture=> (
-            <li className={s.ImageGalleryItem} key={picture.id}>
             <ImageGalleryItem picture={picture} onModalOpen={onModalOpen}/>
-            </li>
         ))
         }
         </ul>
