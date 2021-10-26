@@ -8,7 +8,7 @@ export default function ImageGallery({pictures, onModalOpen}){
     return (
         <ul className={s.ImageGallery} >
         {pictures.map(picture=> (
-            <ImageGalleryItem picture={picture} onModalOpen={onModalOpen}/>
+            <ImageGalleryItem picture={picture} onModalOpen={onModalOpen} key={picture.id}/>
         ))
         }
         </ul>
